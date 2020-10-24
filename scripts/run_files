@@ -1,0 +1,8 @@
+#!/bin/bash
+
+script_path = "/path/to/script/NLP_task_4_inparts.py"
+
+for file in tiny*.txt
+do
+    python3 "$script_path" "$file"
+done
