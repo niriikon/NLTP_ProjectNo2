@@ -12,8 +12,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import webbrowser
 import task1, task2, task3, task4, task5, task67
 
-#from matplotlib.figure import Figure
-
 
 """
 Plans:
@@ -23,35 +21,28 @@ Plans:
     Each window has options to...
         Calculate and plot with currently chosen dataset
         Save calculated dataset or figures
-        Load previously calculated results instead of currently chosen dataset
         Close window (clear memory?)
 """
 
 class Page(tk.Frame):
-    # Jos kaikille tulee yhteisiä alustuksia, niin sitten tällä. Muuten aika vitun turha.
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.master = kwargs['master']
-        #self.pack()
-        #self.pack(side="top", fill="both", expand=True)
         self.create_frames()
-        #self.btn_quit = tk.Button(self.frm_buttons, width=10, text="QUIT", command=root.destroy)
-        #self.btn_quit.pack(side=tk.BOTTOM)
 
     def create_frames(self):
         self.frm_plots = tk.Frame(self, relief=tk.SUNKEN, borderwidth=5)
         self.frm_info = tk.Frame(self)
-        self.frm_plots.pack(side=tk.LEFT, fill='y', expand=True)
+        self.frm_plots.pack(side=tk.LEFT, fill='both', expand=True)
         self.frm_info.pack(side=tk.RIGHT)
 
         self.msg_info = tk.Message(self.frm_info, text='Task description')
-        self.msg_info.pack(side='top', fill='y')
+        self.msg_info.pack(side='top', fill='both', expand=True)
 
     def save_file(self):
         return filedialog.asksaveasfilename(initialdir="./", title="Save results", filetypes=(("PNG files","*.png"),("all files","*.*")))
 
 class MainMenu(tk.Frame):
-    #def __init__(self, master=None):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.master = kwargs['master']
@@ -71,7 +62,7 @@ class MainMenu(tk.Frame):
         self.p4 = Page4(master=self.container)
         self.p5 = Page5(master=self.container)
         self.p6 = Page6(master=self.container)
-        self.p7 = Page7(master=self.container)
+        #self.p7 = Page7(master=self.container)
         self.p8 = Page8(master=self.container)
         self.info = InfoPage(master=self.container)
 
@@ -81,7 +72,7 @@ class MainMenu(tk.Frame):
         self.p4.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.p5.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.p6.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
-        self.p7.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
+        #self.p7.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.p8.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
         self.info.place(in_=self.container, x=0, y=0, relwidth=1, relheight=1)
 
@@ -92,14 +83,6 @@ class MainMenu(tk.Frame):
     def load_data(self):
         self.filename = filedialog.askopenfilename(initialdir = './', title='Load dataset', filetypes=(("text", "*.txt"), ("all files", "*.*")))
         print(self.filename)
-
-    """
-    def open_file(self, results):
-        load_from = filedialog.askopenfilename(initialdir = "./",title = "Open results",filetypes = (("text files","*.txt"),("all files","*.*")))
-        with open(load_from, 'r', encoding= 'utf-8') as f:
-            results = f.readlines()
-        print('Opened file ', load_from)
-    """
 
     def create_widgets(self):
         self.frm_btn_top = tk.Frame(self.controls, background='#c0c4cc')
@@ -122,11 +105,11 @@ class MainMenu(tk.Frame):
         self.btn_task5 = tk.Button(self.frm_btn_bottom, width=10, text='Task 5', highlightbackground='#c0c4cc', command=self.p5.lift)
         self.btn_task5.pack(side='left')
 
-        self.btn_task6 = tk.Button(self.frm_btn_bottom, width=10, text='Task 6&7', highlightbackground='#c0c4cc', command=self.p6.lift)
+        self.btn_task6 = tk.Button(self.frm_btn_bottom, width=10, text='Task 6 & 7', highlightbackground='#c0c4cc', command=self.p6.lift)
         self.btn_task6.pack(side='left')
 
-        self.btn_task7 = tk.Button(self.frm_btn_bottom, width=10, fg='gray', text='Task 7', highlightbackground='#c0c4cc', command=self.p7.lift)
-        self.btn_task7.pack(side='left')
+        #self.btn_task7 = tk.Button(self.frm_btn_bottom, width=10, fg='gray', text='Task 7', highlightbackground='#c0c4cc', command=self.p7.lift)
+        #self.btn_task7.pack(side='left')
 
         self.btn_task8 = tk.Button(self.frm_btn_bottom, width=10, text='Task 8', highlightbackground='#c0c4cc', command=self.p8.lift)
         self.btn_task8.pack(side='left')
@@ -134,17 +117,12 @@ class MainMenu(tk.Frame):
         self.btn_info = tk.Button(self.frm_btn_top, width=10, text='Info', highlightbackground='#c0c4cc', command=self.info.lift)
         self.btn_info.pack(side='right')
 
-        #self.btn_save = tk.Button(self.frm_btn_top, width=10, text='Save results', command=self.save_file)
-        #self.btn_save.pack(side='right')
-
         self.btn_load = tk.Button(self.frm_btn_top, width=10, text='Load dataset', highlightbackground='#c0c4cc', command=self.load_data)
         self.btn_load.pack(side='right')
 
         self.btn_quit = tk.Button(self.frm_btn_bottom, width=10, text="QUIT", highlightbackground='#c0c4cc', command=root.destroy)
         self.btn_quit.pack(side='right')
 
-        #self.btn_open = tk.Button(self.frm_btn_bottom, width=10, text="Open results", command=self.save_file)
-        #self.btn_open.pack(side='right')
 
 class Page1(Page):
     def __init__(self, *args, **kwargs):
@@ -180,7 +158,7 @@ class Page1(Page):
 class Page2(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Task 2\n\nDraw Zipf\'s law associated to whole corpus.\n'
+        self.desc = 'Task 2\n\nPlot Zipf\'s law associated to whole corpus.\n'
         self.msg_info['text'] = self.desc
         self.btn_calc = tk.Button(self.frm_info, width=10, text='Calculate', command=self.calculate)
         self.btn_calc.pack(side='bottom')
@@ -276,7 +254,6 @@ class Page4(Page):
     def query_save(self):
         try:
             print(self.article_1[0], self.article_2[0])
-            #save_as = self.save_file()
             save_as = filedialog.asksaveasfilename(initialdir="./", title="Save first article", filetypes=(("text files","*.txt"),("all files","*.*")))
             with open(save_as, "w", encoding= "utf-8") as f:
                 f.write(self.article_1)
@@ -342,7 +319,7 @@ class Page5(Page):
 class Page6(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Task 6 and 7(?)\n\nInvestigate the common wording between V1 and V2. Report the value of Jaccard similarity J(V1,V2).\n'
+        self.desc = 'Tasks 6 and 7\n\nInvestigate the common wording between V1 and V2. Report the value of Jaccard similarity J(V1,V2).\nAnalyze the variation of common word with respect to frequency.\n'
         self.msg_info['text'] = self.desc
         self.data1 = None
         self.data2 = None
@@ -373,7 +350,7 @@ class Page6(Page):
             path, set1 = os.path.split(self.data1)
             _, set2 = os.path.split(self.data2)
             jaccard, self.plt = task67.main(path, set1, set2)
-            print(jaccard)
+            self.msg_info['text'] = '{}\nJaccard distance between texts is {}\n'.format(self.desc, round(jaccard, 4))
             
             clear_frame(self.frm_plots)
             self.canvas = FigureCanvasTkAgg(self.plt, self.frm_plots)
@@ -391,6 +368,7 @@ class Page6(Page):
         except (AttributeError, NameError):
             self.msg_info['text'] = self.desc + '\nERROR: Plot not calculated\n'
 
+"""
 class Page7(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
@@ -401,7 +379,7 @@ class Page7(Page):
         #self.btn_save = tk.Button(self.frm_info, width=10, text='Save figure', command=self.plot_save)
         #self.btn_save.pack(side='bottom')
 
-    """
+    
     def calculate(self):
         if app.filename:
             path, dataset = app.filename.rsplit('/', 1)
@@ -421,12 +399,12 @@ class Page7(Page):
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
             self.msg_info['text'] = self.desc + '\nERROR: Plot not calculated\n'
-    """
+"""
 
 class Page8(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Task 8\n\nFind out the categories of wording available in common vocabualry.\nUse the general inquirer provided to identify the categories present vocabularies.\n'
+        self.desc = 'Task 8\n\nFind out the categories of wording available in common vocabulary.\nUse the general inquirer provided to identify the categories present in vocabularies.\n'
         self.msg_info['text'] = self.desc
         #self.btn_calc = tk.Button(self.frm_info, width=10, text='Calculate', command=self.calculate)
         #self.btn_calc.pack(side='bottom')
@@ -460,9 +438,9 @@ class InfoPage(tk.Frame):
         tk.Frame.__init__(self, *args, **kwargs)
         self.master = kwargs['master']
         self.pack()
-        desc = """Group info:\n    Aapo Juutinen, Project leader\n    Eetu Ervasti\n    Niklas Riikonen\n\nProject topic:\n    Zipf Law and validation 2\n    Testing Zipf's law on a large scale WikiCorpus."""
-        self.msg_info = tk.Message(self, text=desc, borderwidth=10)
-        self.msg_info.pack(fill='both')
+        desc = 'Group info:\n    Aapo Juutinen, Project leader\n    Eetu Ervasti\n    Niklas Riikonen\n\nProject topic:\n    Zipf Law and validation 2\n    Testing Zipf\'s law on a large scale WikiCorpus.'
+        self.msg_info = tk.Message(self, text=desc, width=350, borderwidth=10)
+        self.msg_info.pack(fill='both', pady='100')
         body = 'mailto: ?to=***REMOVED***, ***REMOVED***, ***REMOVED***&subject=521158S Group project'
         self.btn_contact = tk.Button(self, text='Contact', width=10, command=lambda: webbrowser.open(body, new=1))
         self.btn_contact.pack()
@@ -472,23 +450,9 @@ def clear_frame(frm):
     for widget in frm.winfo_children():
         widget.destroy()
 
-"""
-def task_2(self):
-    for widget in self.frm_plots.winfo_children():
-        widget.destroy()
-
-def task_3(self):
-    path, dataset = self.filename.rsplit('/', 1)
-    plt = task3.main(path, dataset)
-    
-    self.canvas = FigureCanvasTkAgg(plt, self.frm_plots)
-    self.canvas.draw()
-    self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-"""
-
 
 root = tk.Tk()
 app = MainMenu(master=root)
 app.pack(fill='both', expand=True)
-root.wm_geometry("800x600")
+root.wm_geometry("1024x720")
 app.mainloop()
