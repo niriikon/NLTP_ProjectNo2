@@ -441,9 +441,6 @@ class InfoPage(tk.Frame):
         desc = 'Group info:\n    Aapo Juutinen, Project leader\n    Eetu Ervasti\n    Niklas Riikonen\n\nProject topic:\n    Zipf Law and validation 2\n    Testing Zipf\'s law on a large scale WikiCorpus.'
         self.msg_info = tk.Message(self, text=desc, width=350, borderwidth=10)
         self.msg_info.pack(fill='both', pady='100')
-        body = 'mailto: ?to=***REMOVED***, ***REMOVED***, ***REMOVED***&subject=521158S Group project'
-        self.btn_contact = tk.Button(self, text='Contact', width=10, command=lambda: webbrowser.open(body, new=1))
-        self.btn_contact.pack()
 
 
 def clear_frame(frm):
