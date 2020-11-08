@@ -1,5 +1,19 @@
 ### Definitions of datasets ###
 
+#### Datasets for common use: ####
+* inquirerbasic.csv
+   * General inquirer data retrieved from http://www.wjh.harvard.edu/~inquirer/inquirerbasic.xls
+* wiki.txt
+   * Wikipedia dump file processed into plaintext with one article per line
+   * English articles without metadata
+   * Roughly 1.5 million articles
+* part.txt
+   * A 500 MB subsection of _wiki.txt_
+* small.txt
+   * A 50 MB subsection of _wiki.txt_
+* tiny.txt
+   * A 5 MB subsection of _wiki.txt_
+
 #### Processed articles from task 4: ####
 Old ("topic versus topic"):
 * capitalismcommunism_final.txt
