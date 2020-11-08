@@ -15,7 +15,7 @@ text1_words = set(wordlist_t1.words(text_f1))
 text2_words = set(wordlist_t2.words(text_f2))
 
 #Task 6 calculate jaccardian distance
-jd_texts = nltk.jaccard_distance(text1_words,text2_words)
+jd_texts = -1*(nltk.jaccard_distance(text1_words,text2_words)) + 1 
 print(jd_texts, 'Jaccard distance between text1 and text2')
 
 #Task 7
