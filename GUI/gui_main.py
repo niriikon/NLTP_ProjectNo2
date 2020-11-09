@@ -1,7 +1,7 @@
 """
 Graphical user interface required for task 9.
-Rudimentary first version calls existing scripts and plots results.
-(Future version should combine scripts' behavior to avoid redundant processing.)
+First version calls existing scripts and plots results.
+Future version should combine scripts' behavior to avoid redundant processing.
 """
 import os
 import tkinter as tk
@@ -10,7 +10,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import webbrowser
-import task1, task2, task3, task4, task5, task67
+import task1, task2, task3, task4, task5, task67, task8
 
 
 """
@@ -18,6 +18,7 @@ Plans:
     Main GUI window which opens new windows for processing and plotting different tasks
         Select a file to use as dataset
         Calculate task 1-8 (new window, main remains open)
+        -> Chose to use frames instead of separate windows
     Each window has options to...
         Calculate and plot with currently chosen dataset
         Save calculated dataset or figures
@@ -81,8 +82,8 @@ class MainMenu(tk.Frame):
         self.lift()
 
     def load_data(self):
-        self.filename = filedialog.askopenfilename(initialdir = './', title='Load dataset', filetypes=(("text", "*.txt"), ("all files", "*.*")))
-        print(self.filename)
+        self.filename = filedialog.askopenfilename(initialdir='./', title='Load dataset', filetypes=(("text files", "*.txt"), ("all files", "*.*")))
+        #print(self.filename)
 
     def create_widgets(self):
         self.frm_btn_top = tk.Frame(self.controls, background='#c0c4cc')
@@ -149,7 +150,6 @@ class Page1(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -180,7 +180,6 @@ class Page2(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -212,7 +211,6 @@ class Page3(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -221,7 +219,7 @@ class Page3(Page):
 class Page4(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Task 4\n\nQuery two opposing topics from corpus. Output the articles which matched queries best.\n'
+        self.desc = 'Task 4\n\nQuery two topics from corpus. Output the articles which matched queries best.\n'
         self.msg_info['text'] = self.desc
         self.btn_calc = tk.Button(self.frm_info, width=10, text='Calculate', command=self.calculate)
         self.btn_calc.pack(side='bottom')
@@ -238,14 +236,13 @@ class Page4(Page):
         self.lbl_e2.grid(row=1, column=0)
         self.entry2.grid(row=1, column=1)
 
-
     def calculate(self):
         if app.filename:
             if self.entry1.get() and self.entry2.get():
                 path, dataset = os.path.split(app.filename)
                 self.article_1, self.article_2 = task4.main(path, dataset, self.entry1.get(), self.entry2.get())
                 msg_out = tk.Message(self.frm_plots, text=self.entry1.get() + ':\n' + self.article_1[:500] + '...\n\n' + self.entry2.get() + ':\n' + self.article_2[:500] + '...\n')
-                msg_out.pack(fill='both')
+                msg_out.pack(fill='both', pady=30)
             else:
                 self.msg_info['text'] = self.desc + '\nERROR: Topic(s) for query missing\n'
         else:
@@ -253,7 +250,6 @@ class Page4(Page):
 
     def query_save(self):
         try:
-            print(self.article_1[0], self.article_2[0])
             save_as = filedialog.asksaveasfilename(initialdir="./", title="Save first article", filetypes=(("text files","*.txt"),("all files","*.*")))
             with open(save_as, "w", encoding= "utf-8") as f:
                 f.write(self.article_1)
@@ -268,7 +264,7 @@ class Page4(Page):
 class Page5(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Task 5\n\nConsider a vocabulary of the 1000 most frequent words for each task 4 queries. Explore the behavior of vocabulary for each query\'s outcome.\nPlot frequency vs rank for both.\n'
+        self.desc = 'Task 5\n\nConsider a vocabulary of the 1000 most frequent words for each of task 4 queries. Explore the behavior of vocabulary for each query\'s outcome.\nPlot frequency vs rank for both.\n'
         self.msg_info['text'] = self.desc
         self.data1 = None
         self.data2 = None
@@ -296,9 +292,9 @@ class Page5(Page):
 
     def calculate(self):
         if self.data1 and self.data2:
-            path, set1 = os.path.split(self.data1)
-            _, set2 = os.path.split(self.data2)
-            self.plt = task5.main(path, set1, set2)
+            path1, set1 = os.path.split(self.data1)
+            path2, set2 = os.path.split(self.data2)
+            self.plt = task5.main(path1, path2, set1, set2)
             
             clear_frame(self.frm_plots)
             self.canvas = FigureCanvasTkAgg(self.plt, self.frm_plots)
@@ -310,7 +306,6 @@ class Page5(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -319,7 +314,7 @@ class Page5(Page):
 class Page6(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
-        self.desc = 'Tasks 6 and 7\n\nInvestigate the common wording between V1 and V2. Report the value of Jaccard similarity J(V1,V2).\nAnalyze the variation of common word with respect to frequency.\n'
+        self.desc = 'Tasks 6 and 7\n\nInvestigate the common wording between V1 and V2. Report the value of Jaccard similarity J(V1,V2).\nAnalyze the variation of common words with respect to frequency.\n'
         self.msg_info['text'] = self.desc
         self.data1 = None
         self.data2 = None
@@ -338,18 +333,18 @@ class Page6(Page):
         self.e1.pack(fill='x', side='bottom')
 
     def open1(self):
-        self.data1 = filedialog.askopenfilename(initialdir='./', title='Load article', filetypes=(("text", "*.txt"), ("all files", "*.*")))
+        self.data1 = filedialog.askopenfilename(initialdir='./', title='Load article', filetypes=(("text files", "*.txt"), ("all files", "*.*")))
         self.e1.insert(0, self.data1)
 
     def open2(self):
-        self.data2 = filedialog.askopenfilename(initialdir='./', title='Load article', filetypes=(("text", "*.txt"), ("all files", "*.*")))
+        self.data2 = filedialog.askopenfilename(initialdir='./', title='Load article', filetypes=(("text files", "*.txt"), ("all files", "*.*")))
         self.e2.insert(0, self.data2)
 
     def calculate(self):
         if self.data1 and self.data2:
-            path, set1 = os.path.split(self.data1)
-            _, set2 = os.path.split(self.data2)
-            jaccard, self.plt = task67.main(path, set1, set2)
+            path1, set1 = os.path.split(self.data1)
+            path2, set2 = os.path.split(self.data2)
+            jaccard, self.plt = task67.main(path1, path2, set1, set2)
             self.msg_info['text'] = '{}\nJaccard distance between texts is {}\n'.format(self.desc, round(jaccard, 4))
             
             clear_frame(self.frm_plots)
@@ -362,7 +357,6 @@ class Page6(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -394,7 +388,6 @@ class Page7(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
@@ -406,17 +399,38 @@ class Page8(Page):
         Page.__init__(self, *args, **kwargs)
         self.desc = 'Task 8\n\nFind out the categories of wording available in common vocabulary.\nUse the general inquirer provided to identify the categories present in vocabularies.\n'
         self.msg_info['text'] = self.desc
-        #self.btn_calc = tk.Button(self.frm_info, width=10, text='Calculate', command=self.calculate)
-        #self.btn_calc.pack(side='bottom')
-        #self.btn_save = tk.Button(self.frm_info, width=10, text='Save figure', command=self.plot_save)
-        #self.btn_save.pack(side='bottom')
+        self.data1 = None
+        self.data2 = None
 
-    """
+        self.e1 = tk.Entry(self.frm_info)
+        self.e2 = tk.Entry(self.frm_info)
+        self.btn_open1 = tk.Button(self.frm_info, width=5, text='Open', command=self.open1)
+        self.btn_open2 = tk.Button(self.frm_info, width=5, text='Open', command=self.open2)
+        self.btn_calc = tk.Button(self.frm_info, width=10, text='Calculate', command=self.calculate)
+        self.btn_calc.pack(side='bottom')
+        self.btn_save = tk.Button(self.frm_info, width=10, text='Save figure', command=self.plot_save)
+        self.btn_save.pack(side='bottom')
+        self.btn_open2.pack(side='bottom', anchor='e')
+        self.e2.pack(fill='x', side='bottom')
+        self.btn_open1.pack(side='bottom', anchor='e')
+        self.e1.pack(fill='x', side='bottom')
+
+    def open1(self):
+        self.data1 = filedialog.askopenfilename(initialdir='./', title='Load dataset', filetypes=(("text", "*.txt"), ("all files", "*.*")))
+        self.e1.insert(0, self.data1)
+
+    def open2(self):
+        self.data2 = filedialog.askopenfilename(initialdir='./', title='Load dataset', filetypes=(("text", "*.txt"), ("all files", "*.*")))
+        self.e2.insert(0, self.data2)
+
     def calculate(self):
-        if app.filename:
-            path, dataset = app.filename.rsplit('/', 1)
-            self.plt = task3.main(path, dataset)
+        if self.data1 and self.data2:
+            path1, set1 = os.path.split(self.data1)
+            path2, set2 = os.path.split(self.data2)
+            self.plt = task8.main(path1, path2, set1, set2)
             
+            
+            clear_frame(self.frm_plots)
             self.canvas = FigureCanvasTkAgg(self.plt, self.frm_plots)
             self.canvas.draw()
             self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
@@ -426,19 +440,19 @@ class Page8(Page):
 
     def plot_save(self):
         try:
-            print(self.plt)
             save_as = self.save_file()
             self.plt.savefig(save_as)
         except (AttributeError, NameError):
             self.msg_info['text'] = self.desc + '\nERROR: Plot not calculated\n'
-    """
 
 class InfoPage(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.master = kwargs['master']
         self.pack()
-        desc = 'Group info:\n    Aapo Juutinen, Project leader\n    Eetu Ervasti\n    Niklas Riikonen\n\nProject topic:\n    Zipf Law and validation 2\n    Testing Zipf\'s law on a large scale WikiCorpus.'
+        desc = 'Group info:\n    Aapo Juutinen, Project leader\n    Eetu Ervasti\n    Niklas Riikonen\n\nProject topic:\n    Zipf Law and validation 2\n    Testing Zipf\'s law on a large scale WikiCorpus.\n\n'
+        desc += '\nChoose a task, load a dataset and calculate results.\nSome tasks require two datasets. In these cases, open datasets via the task\'s own window instead of "Load dataset" button below.'
+        desc += '\n\nPlease note that calculating large datasets may require considerable processing time. We recommend testing with a smaller dataset before calculating a large one.\n'
         self.msg_info = tk.Message(self, text=desc, width=350, borderwidth=10)
         self.msg_info.pack(fill='both', pady='100')
 

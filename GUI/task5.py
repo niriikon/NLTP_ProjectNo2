@@ -6,9 +6,9 @@ from matplotlib import figure
 import numpy
 
 if __name__ == '__main__':
-    main(os_join('..', '..', 'corpus'), 'communism.txt', 'capitalism.txt')
+    main(os_join('..', '..', 'corpus'), os_join('..', '..', 'corpus'), 'communism.txt', 'capitalism.txt')
 
-def main(path, dataset_1, dataset_2):
+def main(path_1, path_2, dataset_1, dataset_2):
 
     # Calculates frequency of 1 000 the most common words and creates index vector
     def calculate_freq_rank(corpus_root, text_file):
@@ -47,7 +47,7 @@ def main(path, dataset_1, dataset_2):
     #corpus_root = 'C:/Users/Aapo' # Change this
     #text_file_1 = 'capitalismversuscommunism_final.txt'
         
-    index_1, counts_1000_1 = calculate_freq_rank(path, dataset_1)
+    index_1, counts_1000_1 = calculate_freq_rank(path_1, dataset_1)
 
     #fig, ax = pyplot.subplots(2, 2)  -- Use matplotlib.figure.Figure instead, since pyplot stays hanging when using TkAgg
     fig = figure.Figure()
@@ -64,7 +64,7 @@ def main(path, dataset_1, dataset_2):
 
     #text_file_2 = 'file.txt'
 
-    index_2, counts_1000_2 = calculate_freq_rank(path, dataset_2)
+    index_2, counts_1000_2 = calculate_freq_rank(path_2, dataset_2)
 
     # Fitting Zipf's law
     zipf_law(index_2, counts_1000_2, ax[2])

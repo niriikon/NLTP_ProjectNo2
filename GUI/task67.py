@@ -6,9 +6,9 @@ from matplotlib import figure
 from os.path import join as os_join
 
 if __name__ == '__main__':
-    main(os_join('..', '..', 'corpus'), 'communism.txt', 'capitalism.txt')
+    main(os_join('..', '..', 'corpus'), os_join('..', '..', 'corpus'), 'communism.txt', 'capitalism.txt')
 
-def main(path, text_f1, text_f2):
+def main(path_1, path_2, text_f1, text_f2):
     #text_f1 = 'scientificartistic_final.txt' #need to change these to actual files
     #text_f2 = 'dogscats_final.txt'
     #path = r'C:/Users/Käyttäjä/Desktop/Python38/' #change this
@@ -16,14 +16,14 @@ def main(path, text_f1, text_f2):
     #read the two text files and extract all words
     #set takes out duplicates and is needed for jaccardian distance
 
-    wordlist_t1 = PlaintextCorpusReader(path, text_f1)
-    wordlist_t2 = PlaintextCorpusReader(path, text_f2)
+    wordlist_t1 = PlaintextCorpusReader(path_1, text_f1)
+    wordlist_t2 = PlaintextCorpusReader(path_2, text_f2)
     text1_words = set(wordlist_t1.words(text_f1))
     text2_words = set(wordlist_t2.words(text_f2))
 
     #Task 6 calculate jaccardian distance
     jd_texts = -1*(nltk.jaccard_distance(text1_words,text2_words)) + 1
-    print(jd_texts, 'Jaccard distance between text1 and text2')
+    #print(jd_texts, 'Jaccard distance between text1 and text2')
 
     #Task 7
     #Need word frequencies
@@ -32,8 +32,8 @@ def main(path, text_f1, text_f2):
 
     fdist_text1 = FreqDist(txt1)
     fdist_text2 = FreqDist(txt2)
-    fdist_text1.pprint(maxlen = 30)
-    fdist_text2.pprint(maxlen = 30)
+    #fdist_text1.pprint(maxlen = 30)
+    #fdist_text2.pprint(maxlen = 30)
 
     def my_counter(numerator, nominator, freq_lower,freq_upper):
         words_in_numerator = set(list(filter(lambda x: x[1] >= freq_lower and x[1] <= freq_upper,numerator.items())))
@@ -70,7 +70,7 @@ def main(path, text_f1, text_f2):
     #R2_6 = my_counter(numerator = fdist_text2,nominator = fdist_text1 ,freq_lower = 10, freq_upper = 11)
 
     #etc. maby loop throgh function to save from copy/pasting
-    print([R1_1,R1_2,R1_3,R1_4,R1_5,R2_1,R2_2,R2_3,R2_4,R1_5])
+    #print([R1_1,R1_2,R1_3,R1_4,R1_5,R2_1,R2_2,R2_3,R2_4,R1_5])
 
     fig = figure.Figure()
     ax = [fig.add_subplot(211), fig.add_subplot(212)]
